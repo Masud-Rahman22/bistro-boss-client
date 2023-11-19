@@ -1,16 +1,34 @@
-
+import { useContext } from "react";
+import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../../../Providers/AuthProvider";
+import { FaShoppingCart } from 'react-icons/fa';
+import useCart from "../../Hookes/useCart";
 
 const NavBar = () => {
+    const { user, Logout } = useContext(AuthContext)
+    const [cart] = useCart()
+    console.log(cart);
+    const handleLogout = () => {
+        Logout()
+            .then(() => { })
+            .catch(err => {
+                console.error(err);
+            })
+    }
     const NavLinks = <>
-        <li><a>Item 1</a></li>
-        <li>
-            <a>Parent</a>
-            <ul className="p-2">
-                <li><a>Submenu 1</a></li>
-                <li><a>Submenu 2</a></li>
-            </ul>
-        </li>
-        <li><a>Item 3</a></li>
+        <li><NavLink to='/'>Home</NavLink></li>
+        <li><NavLink to='/menu'>Our Menu</NavLink></li>
+        <li><NavLink to='/orders/Salads'>Orders</NavLink></li>
+        <li><NavLink to='/secret'>Secret Recipe</NavLink></li>
+        <li><Link to='/dashboard/cart'>
+            <button className="btn mx-5 btn-primary">
+                <FaShoppingCart className="mr-2" size={20}></FaShoppingCart>
+                <div className="badge badge-secondary">+{cart.length}</div>
+            </button></Link></li>
+        {
+            user ? <>
+                <button onClick={handleLogout}>Log out</button></> : <><li><NavLink to='/login'>Login</NavLink></li></>
+        }
     </>
     return (
         <div className="navbar fixed z-10 bg-black text-white bg-opacity-50">
@@ -30,21 +48,12 @@ const NavBar = () => {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                    <li><a>Item 1</a></li>
-                    <li tabIndex={0}>
-                        <details>
-                            <summary>Parent</summary>
-                            <ul className="p-2">
-                                <li><a>Submenu 1</a></li>
-                                <li><a>Submenu 2</a></li>
-                            </ul>
-                        </details>
-                    </li>
-                    <li><a>Item 3</a></li>
+                    {NavLinks}
                 </ul>
             </div>
             <div className="navbar-end">
-                <a className="btn">Button</a>
+                {/* <p>{user.displayName}</p> */}
+                <button className="btn">button</button>
             </div>
         </div>
     );
