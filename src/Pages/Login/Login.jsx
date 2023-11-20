@@ -97,7 +97,7 @@ const Login = () => {
                             </div>
                             <div className="form-control mt-6">
                                 {/* TODO: dsiabled in false */}
-                                <input disabled={false} className="btn btn-primary" type="submit" value="Login" />
+                                <input disabled={disabled} className="btn btn-primary" type="submit" value="Login" />
                             </div>
                             <div onClick={handleGoogleLogin} className='flex items-center justify-center py-5'>
                             <SocailLogin></SocailLogin>

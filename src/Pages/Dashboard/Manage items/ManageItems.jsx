@@ -1,12 +1,37 @@
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import SharedTitle from "../../../Components/SharedTitle/SharedTitle";
 import useMenu from "../../../Hookes/useMenu";
+import Swal from "sweetalert2";
+import useAxiosSecure from "../../../Hookes/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 
 const ManageItems = () => {
-    const [menus] = useMenu();
+    const [menus, , refetch] = useMenu();
+    const axiosSecure = useAxiosSecure();
     const handleToDeleteItem = item => {
-        console.log(item);
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                const res = await axiosSecure.delete(`/menu/${item._id}`)
+                if (res.data.deletedCount > 0) {
+                    refetch()
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                }
+            }
+
+        });
     }
     return (
         <div>
@@ -46,7 +71,9 @@ const ManageItems = () => {
                                 </td>
                                 <td>{menu.price}</td>
                                 <td>
-                                    <button className="btn bg-yellow-600 btn-md"><FaEdit className="text-white text-xl"></FaEdit></button>
+                                    <Link to={`/dashboard/updateItem/${menu._id}`}>
+                                        <button className="btn bg-yellow-600 btn-md"><FaEdit className="text-white text-xl"></FaEdit></button>
+                                    </Link>
                                 </td>
                                 <td>
                                     <button onClick={() => handleToDeleteItem(menu)} className="btn btn-ghost btn-lg text-red-600"><FaTrashAlt></FaTrashAlt></button>
